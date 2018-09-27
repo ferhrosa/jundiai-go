@@ -1,0 +1,22 @@
+<div class="map" id="map"></div>
+
+<div *ngIf="!hasRequestedMapPermission && hasMapPermission === null" class="request-permission">
+    <div class="message">
+        Para visualizar o mapa, é necessário que você dê permissão para este aplicativo visualizar a sua localização
+        atual.<br>
+        <button mat-raised-button color="accent" (click)="initializeMap()">
+            Dar permissão
+        </button>
+    </div>
+</div>
+
+<div *ngIf="hasRequestedMapPermission && hasMapPermission === false" class="no-permission">
+    <div class="message" color="warn">
+        A permissão para ver sua localização atual foi negada.<br>
+        Não será possível exibir o mapa.
+    </div>
+</div>
+
+<div *ngIf="hasRequestedMapPermission && hasMapPermission === null" class="loading">
+    <mat-spinner></mat-spinner>
+</div>

@@ -1,0 +1,26 @@
+@mixin map-stretched {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;    
+}
+
+div.map  {
+    @include map-stretched;
+}
+
+div.no-permission, div.request-permission, div.loading {
+    @include map-stretched;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    > .message {
+        max-width: 50%;
+        text-align: center;
+    }
+}
+

@@ -10,3 +10,9 @@ $warn:    mat-palette($mat-red, 500);
 $theme: mat-light-theme($primary, $accent, $warn);
 
 @include angular-material-theme($theme);
+
+/********************************************************/
+
+body {
+    background-color: #eee;
+}
