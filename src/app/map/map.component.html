@@ -1,5 +1,13 @@
 <div class="map" id="map"></div>
 
+<div class="controls" *ngIf="hasBuildedMap">
+
+    <!-- <input [ngModel]="zoom" style="position: absolute; top: 20px; left: 20px">
+
+    <textarea [ngModel]="bounds | json" style="position: absolute; top: 40px; left: 20px"></textarea> -->
+
+</div>
+
 <div *ngIf="!hasRequestedMapPermission && hasMapPermission === null" class="request-permission">
     <div class="message">
         Para visualizar o mapa, é necessário que você dê permissão para este aplicativo visualizar a sua localização
