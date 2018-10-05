@@ -1,4 +1,4 @@
-// Example file that can be used to create the required tokens.js file.
+// Example file that can be used to create the required tokens.ts file.
 
 export const tokens = {
     mapbox: 'pk.1111111111111111111111111111111111',
