@@ -1,6 +1,6 @@
 <div class="map" id="map"></div>
 
-<div class="user"><div></div></div>
+<div class="user" *ngIf="hasMapPermission === true"><div></div></div>
 
 <div class="controls" *ngIf="hasBuildedMap">
 
@@ -17,10 +17,10 @@
 
 <div *ngIf="!hasRequestedMapPermission && hasMapPermission === null" class="request-permission">
     <div class="message">
-        Para visualizar o mapa, é necessário que você dê permissão para este aplicativo visualizar a sua localização
+        Para visualizar o mapa, é necessário que você conceda permissão para este aplicativo visualizar a sua localização
         atual.<br>
         <button mat-raised-button color="accent" (click)="initializeMap()">
-            Dar permissão
+            Conceder permissão
         </button>
     </div>
 </div>
