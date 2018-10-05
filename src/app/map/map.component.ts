@@ -3,8 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import * as mapboxgl from 'mapbox-gl';
 
 const container = 'map';
+const initialZoom = 17;
+const initialUserScale = 0.75;
+const minUserScale = 0.25;
 
-const maxBoundaries = new mapboxgl.LngLatBounds([-47.051, -23.345], [-46.765, -23.055]);
+// const maxBoundaries = new mapboxgl.LngLatBounds([-47.051, -23.345], [-46.765, -23.055]);
 
 @Component({
     selector: 'app-map',
@@ -26,6 +29,8 @@ export class MapComponent implements OnInit {
     // bounds: mapboxgl.LngLatBounds;
 
     // userPositionSource: mapboxgl.GeoJSONSource;
+
+    userTransform = 'scale(0)';
 
     constructor() { }
 
@@ -76,7 +81,7 @@ export class MapComponent implements OnInit {
         this.map = new mapboxgl.Map({
             container: container,
             style: this.style,
-            zoom: 17,
+            zoom: initialZoom,
             maxZoom: 18,
             minZoom: 12,
             // maxBounds: maxBoundaries,
@@ -84,9 +89,15 @@ export class MapComponent implements OnInit {
             pitch: 30,
             logoPosition: 'top-left',
             dragPan: false,
+            // scrollZoom: false,
+            // doubleClickZoom: false,
+            // touchZoomRotate: false,
+            // boxZoom: false,
         });
 
         this.map.on('load', () => {
+
+            this.updateUserTransform();
 
             this.map.addSource('jundiai', {
                 type: 'geojson',
@@ -103,33 +114,28 @@ export class MapComponent implements OnInit {
                 },
             });
 
-            // this.map.addSource('user-position', {
-            //     type: 'geojson',
-            //     data: this.getUserPosition(),
-            // });
-
-            // this.userPositionSource = <mapboxgl.GeoJSONSource>this.map.getSource('user-position');
-
-            // this.map.addLayer({
-            //     id: 'user',
-            //     type: 'symbol',
-            //     source: 'user-position',
-            //     layout: {
-            //         'icon-image': 'rocket-15',
-            //     },
-            // });
-
         });
+
+        this.map.on('zoom', this.updateUserTransform);
     }
 
     updateCurrentPosition(position: Position) {
         this.lat = position.coords.latitude;
         this.lng = position.coords.longitude;
 
-        // if (this.userPositionSource) {
-        //     this.userPositionSource.setData(this.getUserPosition());
-        // }
+        this.map.flyTo({
+            center: [this.lng, this.lat],
+            speed: 0.25,
+            curve: 2,
+        });
+    }
 
-        this.map.panTo([this.lng, this.lat]);
+    updateUserTransform = () => {
+        const relativeZoom = initialZoom - this.map.getZoom();
+
+        let scale = initialUserScale - (relativeZoom / 5);
+        if (scale < minUserScale) { scale = minUserScale; }
+
+        this.userTransform = `scale(${scale})`;
     }
 }

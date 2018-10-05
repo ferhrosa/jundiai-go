@@ -1,6 +1,8 @@
 <div class="map" id="map"></div>
 
-<div class="user" *ngIf="hasMapPermission === true"><div></div></div>
+<div class="user" *ngIf="hasMapPermission === true">
+    <div [style.transform]="userTransform"></div>
+</div>
 
 <div class="controls" *ngIf="hasBuildedMap">
 
