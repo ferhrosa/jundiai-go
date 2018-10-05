@@ -25,7 +25,7 @@ export class MapComponent implements OnInit {
     // zoom: number;
     // bounds: mapboxgl.LngLatBounds;
 
-    userPositionSource: mapboxgl.GeoJSONSource;
+    // userPositionSource: mapboxgl.GeoJSONSource;
 
     constructor() { }
 
@@ -78,10 +78,12 @@ export class MapComponent implements OnInit {
             style: this.style,
             zoom: 17,
             maxZoom: 18,
-            maxBounds: maxBoundaries,
+            minZoom: 12,
+            // maxBounds: maxBoundaries,
             center: [this.lng, this.lat],
+            pitch: 30,
             logoPosition: 'top-left',
-            // dragPan: false,
+            dragPan: false,
         });
 
         this.map.on('load', () => {
@@ -101,21 +103,21 @@ export class MapComponent implements OnInit {
                 },
             });
 
-            this.map.addSource('user-position', {
-                type: 'geojson',
-                data: this.getUserPosition(),
-            });
+            // this.map.addSource('user-position', {
+            //     type: 'geojson',
+            //     data: this.getUserPosition(),
+            // });
 
-            this.userPositionSource = <mapboxgl.GeoJSONSource>this.map.getSource('user-position');
+            // this.userPositionSource = <mapboxgl.GeoJSONSource>this.map.getSource('user-position');
 
-            this.map.addLayer({
-                id: 'user',
-                type: 'symbol',
-                source: 'user-position',
-                layout: {
-                    'icon-image': 'rocket-15',
-                },
-            });
+            // this.map.addLayer({
+            //     id: 'user',
+            //     type: 'symbol',
+            //     source: 'user-position',
+            //     layout: {
+            //         'icon-image': 'rocket-15',
+            //     },
+            // });
 
         });
     }
@@ -124,9 +126,9 @@ export class MapComponent implements OnInit {
         this.lat = position.coords.latitude;
         this.lng = position.coords.longitude;
 
-        if (this.userPositionSource) {
-            this.userPositionSource.setData(this.getUserPosition());
-        }
+        // if (this.userPositionSource) {
+        //     this.userPositionSource.setData(this.getUserPosition());
+        // }
 
         this.map.panTo([this.lng, this.lat]);
     }

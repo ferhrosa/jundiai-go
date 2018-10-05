@@ -24,3 +24,31 @@ div.no-permission, div.request-permission, div.loading {
     }
 }
 
+div.user {
+    position: absolute;
+    bottom: 50%;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // align-items: flex-end;
+    // justify-content: center;
+
+    // background-color: rosybrown;
+
+    > div {
+        // bottom: 0;
+        // align-self: flex-end;
+        // margin-top: auto;
+        width: 80px;
+        height: 110px;
+        margin-bottom: -5px;
+        background-image: url("../../assets/female_tilesheet.png");
+        background-position: 0 0;
+        transform: scale(0.5);
+        transform-origin: 50% 100%;
+
+        // background-color: yellow;
+    }
+}
