@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 import * as mapboxgl from 'mapbox-gl';
 
@@ -30,9 +31,11 @@ export class MapComponent implements OnInit {
 
     // userPositionSource: mapboxgl.GeoJSONSource;
 
-    userTransform = 'scale(0)';
+    userTransform: SafeStyle = 'scale(0)';
+    isUserWalking = false;
+    isUserFacingLeft = false;
 
-    constructor() { }
+    constructor(private sanitizer: DomSanitizer) { }
 
     ngOnInit() {
         if (this.hasRequestedMapPermission) { this.initializeMap(); }
@@ -117,9 +120,16 @@ export class MapComponent implements OnInit {
         });
 
         this.map.on('zoom', this.updateUserTransform);
+
+        this.map.on('movestart', () => this.isUserWalking = true);
+        this.map.on('moveend', () => this.isUserWalking = false);
     }
 
     updateCurrentPosition(position: Position) {
+        if (position.coords.longitude !== this.lng) {
+            this.isUserFacingLeft = (position.coords.longitude < this.lng);
+        }
+
         this.lat = position.coords.latitude;
         this.lng = position.coords.longitude;
 
@@ -136,6 +146,8 @@ export class MapComponent implements OnInit {
         let scale = initialUserScale - (relativeZoom / 5);
         if (scale < minUserScale) { scale = minUserScale; }
 
-        this.userTransform = `scale(${scale})`;
+        const rotate = this.isUserFacingLeft ? 'rotateY(180deg)' : '';
+
+        this.userTransform = this.sanitizer.bypassSecurityTrustStyle(`scale(${scale}) ${rotate}`);
     }
 }

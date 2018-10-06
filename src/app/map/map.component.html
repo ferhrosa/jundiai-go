@@ -1,7 +1,7 @@
 <div class="map" id="map"></div>
 
 <div class="user" *ngIf="hasMapPermission === true">
-    <div [style.transform]="userTransform"></div>
+    <div [style.transform]="userTransform" [class.walking]="isUserWalking"></div>
 </div>
 
 <div class="controls" *ngIf="hasBuildedMap">
