@@ -24,8 +24,23 @@ main {
         background-color: #fff;
         @include mat-elevation(5);
 
-        > button {
+        > a {
             flex: 1;
+
+            // .mat-button-wrapper {
+                // display: flex;
+                // flex-direction: column;
+
+                label {
+                    display: block;
+                    font-size: 0.5em;
+                }
+            // }
+
+            // mat-icon, label {
+            //     display: block;
+            //     text-align: center;
+            // }
         }
     }
 

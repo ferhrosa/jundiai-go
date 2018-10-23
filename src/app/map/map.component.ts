@@ -92,10 +92,10 @@ export class MapComponent implements OnInit {
             pitch: 30,
             logoPosition: 'top-left',
             dragPan: false,
-            // scrollZoom: false,
-            // doubleClickZoom: false,
-            // touchZoomRotate: false,
-            // boxZoom: false,
+            scrollZoom: false,
+            doubleClickZoom: false,
+            touchZoomRotate: false,
+            boxZoom: false,
         });
 
         this.map.on('load', () => {
