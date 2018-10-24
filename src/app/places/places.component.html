@@ -1,0 +1,20 @@
+<p>
+  places works!
+</p>
+
+<form #formPlace="ngForm" (submit)="addPlace()">
+
+  <mat-form-field>
+    <input matInput type="text" [(ngModel)]="currentPlace.name" name="name" placeholder="Nome" required>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="!formPlace.form.valid">
+    <mat-icon>save</mat-icon>
+    Salvar
+  </button>
+
+</form>
+
+<mat-list>
+  <a mat-list-item routerLink="/test" *ngFor="let place of places | async"> {{ place.name }} </a>
+</mat-list>

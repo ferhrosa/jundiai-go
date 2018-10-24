@@ -12,5 +12,9 @@
             <mat-icon>location_on</mat-icon>
             <label>Visitados</label>
         </a>
+        <a mat-button routerLink="/places" [class.selected]="currentPage == 'places'">
+            <mat-icon>view_list</mat-icon>
+            <label>Locais</label>
+        </a>
     </nav>
 </main>

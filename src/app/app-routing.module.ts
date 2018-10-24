@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { MapComponent } from './map/map.component';
 import { VisitedComponent } from './visited/visited.component';
+import { PlacesComponent } from './places/places.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
   {
     path: 'visited',
     component: VisitedComponent,
+  },
+  {
+    path: 'places',
+    component: PlacesComponent,
   },
 ];
 
