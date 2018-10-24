@@ -1,17 +1,10 @@
-@import '~@angular/material/theming';
+@import 'theme';
 @import url('//fonts.googleapis.com/icon?family=Material+Icons');
 
 @include mat-core();
 
-$primary: mat-palette($mat-green, 500, A100, 900);
-$accent:  mat-palette($mat-light-blue, 500, A100, 900);
-$warn:    mat-palette($mat-red, 500);
-
-$theme: mat-light-theme($primary, $accent, $warn);
-
+$theme: mat-light-theme($pal-primary, $pal-accent, $pal-warn);
 @include angular-material-theme($theme);
-
-/********************************************************/
 
 body {
     background-color: #eee;

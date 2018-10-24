@@ -1,0 +1,9 @@
+@import '~@angular/material/theming';
+
+$pal-primary: mat-palette($mat-green, 500, A100, 900);
+$pal-accent:  mat-palette($mat-light-blue, 500, A100, 900);
+$pal-warn:    mat-palette($mat-red, 500);
+
+$primary: mat-color($pal-primary);
+$accent: mat-color($pal-accent);
+$warn: mat-color($pal-warn);

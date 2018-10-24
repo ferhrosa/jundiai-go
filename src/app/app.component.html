@@ -4,11 +4,11 @@
     </div>
 
     <nav>
-        <a mat-button routerLink="/">
+        <a mat-button routerLink="/" [class.selected]="currentPage == ''">
             <mat-icon>map</mat-icon>
             <label>Mapa</label>
         </a>
-        <a mat-button routerLink="/visited">
+        <a mat-button routerLink="/visited" [class.selected]="currentPage == 'visited'">
             <mat-icon>location_on</mat-icon>
             <label>Visitados</label>
         </a>

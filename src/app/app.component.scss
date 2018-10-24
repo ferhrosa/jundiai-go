@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@import '../theme';
 
 main {
 
@@ -26,6 +26,11 @@ main {
 
         > a {
             flex: 1;
+            line-height: 30px;
+
+            &.selected {
+                color: $primary;
+            }
 
             // .mat-button-wrapper {
                 // display: flex;
@@ -33,7 +38,8 @@ main {
 
                 label {
                     display: block;
-                    font-size: 0.5em;
+                    font-size: 0.75em;
+                    line-height: 1.75;
                 }
             // }
 
