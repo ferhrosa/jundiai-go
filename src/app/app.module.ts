@@ -1,5 +1,6 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 
 import { AngularFireModule } from '@angular/fire';
@@ -9,7 +10,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatCardModule } from '@angular/material/card';
 
 import { tokens } from 'src/environments/tokens';
 
@@ -28,11 +31,11 @@ import { PlacesComponent } from './places/places.component';
     PlacesComponent,
   ],
   imports: [
-    BrowserModule, FormsModule,
+    BrowserModule, BrowserAnimationsModule, FormsModule,
     AngularFireModule.initializeApp(tokens.firebase),
     AngularFirestoreModule,
     MatButtonModule, MatIconModule, MatProgressSpinnerModule,
-      MatFormFieldModule, MatListModule,
+    MatFormFieldModule, MatInputModule, MatListModule, MatCardModule,
     AppRoutingModule,
   ],
   providers: [],

@@ -1,0 +1,36 @@
+main {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 600px;
+}
+
+.mat-card-header .mat-card-title {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.mat-card {
+    margin-bottom: 20px;
+}
+
+form .mat-card-content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .mat-form-field {
+        width: 30%;
+    }
+}
+
+.mat-nav-list {
+    small {
+        margin-left: 10px;
+        opacity: 0.5;
+    }
+
+    .mat-list-item.selected {
+        background-color: #ddd;
+    }
+}

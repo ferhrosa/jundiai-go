@@ -1,20 +1,65 @@
-<p>
-  places works!
-</p>
+<main>
 
-<form #formPlace="ngForm" (submit)="addPlace()">
+  <form #formPlace="ngForm" id="form-place" (submit)="savePlace()">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ currentPlace.id ? 'Editar' : 'Adicionar' }} Local</mat-card-title>
+      </mat-card-header>
 
-  <mat-form-field>
-    <input matInput type="text" [(ngModel)]="currentPlace.name" name="name" placeholder="Nome" required>
-  </mat-form-field>
+      <mat-card-content>
 
-  <button mat-raised-button color="primary" type="submit" [disabled]="!formPlace.form.valid">
-    <mat-icon>save</mat-icon>
-    Salvar
-  </button>
+        <mat-form-field>
+          <input matInput type="text" [(ngModel)]="currentPlace.name" name="name" placeholder="Nome" required>
+        </mat-form-field>
 
-</form>
+        <mat-form-field>
+          <input matInput type="number" [(ngModel)]="currentPlace.latitude" name="latitude" placeholder="Latitude"
+            required>
+        </mat-form-field>
 
-<mat-list>
-  <a mat-list-item routerLink="/test" *ngFor="let place of places | async"> {{ place.name }} </a>
-</mat-list>
+        <mat-form-field>
+          <input matInput type="number" [(ngModel)]="currentPlace.longitude" name="longitude" placeholder="Longitude"
+            required>
+        </mat-form-field>
+
+          <a href="https://www.google.com/maps/?q={{ currentPlace.latitude }},{{ currentPlace.longitude }}" target="_blank">
+            Ver no Google Maps
+          </a>
+
+      </mat-card-content>
+
+      <mat-card-actions>
+
+        <button mat-raised-button color="primary" type="submit" form="form-place" [disabled]="!formPlace.form.valid">
+          <mat-icon *ngIf="currentPlace.id">edit_location</mat-icon>
+          <mat-icon *ngIf="!currentPlace.id">add_location</mat-icon>
+          Salvar
+        </button>
+
+        <button mat-button type="button" *ngIf="currentPlace.id" (click)="cancelEdit()">
+          <mat-icon>cancel</mat-icon>
+          Cancelar
+        </button>
+
+        <button mat-button type="button" color="warn" *ngIf="currentPlace.id" (click)="deletePlace()">
+          <mat-icon>delete</mat-icon>
+          Excluir
+        </button>
+
+      </mat-card-actions>
+    </mat-card>
+  </form>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Locais</mat-card-title>
+    </mat-card-header>
+    <mat-nav-list mat-card-image>
+      <a mat-list-item *ngFor="let place of places | async" (click)="editPlace(place)" [class.selected]="place.id == currentPlace.id">
+        {{ place.name }}
+        <small>({{ place.latitude }}, {{ place.longitude }})</small>
+      </a>
+    </mat-nav-list>
+  </mat-card>
+
+</main>
