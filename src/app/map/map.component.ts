@@ -1,7 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
+import { AngularFirestore } from '@angular/fire/firestore';
+
 import * as mapboxgl from 'mapbox-gl';
+import { Entity } from '../shared/entity.model';
+import { Observable } from 'rxjs';
+import { Place } from '../shared/place.model';
+import { collections } from '../shared/collections';
+import { Feature, Geometry } from 'geojson';
 
 const container = 'map';
 const initialZoom = 17;
@@ -35,10 +42,17 @@ export class MapComponent implements OnInit {
     isUserWalking = false;
     isUserFacingLeft = false;
 
-    constructor(private sanitizer: DomSanitizer) { }
+    places: Observable<Place[]>;
+    placesSource: mapboxgl.GeoJSONSource;
+
+    constructor(
+        private db: AngularFirestore,
+        private sanitizer: DomSanitizer) { }
 
     ngOnInit() {
         if (this.hasRequestedMapPermission) { this.initializeMap(); }
+
+        this.places = Entity.getList(this.db, collections.places);
     }
 
     getUserPosition = (): GeoJSON.Feature<GeoJSON.Geometry> => {
@@ -117,6 +131,52 @@ export class MapComponent implements OnInit {
                 },
             });
 
+            this.map.addSource('places', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: [],
+                },
+            });
+
+            this.placesSource = this.map.getSource('places') as mapboxgl.GeoJSONSource;
+
+            // Updates the places list when it's loaded (or when it's changed on Firebase).
+            this.places.subscribe(places => {
+                this.placesSource.setData(<GeoJSON.FeatureCollection<GeoJSON.Geometry>>{
+                    type: 'FeatureCollection',
+                    features: places.map<Feature<Geometry>>(place => <Feature<Geometry>>{
+                        type: 'Feature',
+                        id: place.id,
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [place.longitude, place.latitude],
+                        },
+                        properties: {
+                            name: place.name,
+                        },
+                    }),
+                });
+            });
+
+            // Create the layer to display the places on the map.
+            this.map.addLayer({
+                id: 'places',
+                source: 'places',
+                type: 'symbol',
+                layout: {
+                    'icon-image': 'town-hall-15',
+                    'icon-size': 2,
+                    'text-field': '{name}',
+                    'text-size': 15,
+                    'text-offset': [0, 2],
+                },
+                paint: {
+                    'text-color': '#01579b',
+                    'text-halo-color': '#fff',
+                    'text-halo-width': 2,
+                },
+            });
         });
 
         this.map.on('zoom', this.updateUserTransform);
