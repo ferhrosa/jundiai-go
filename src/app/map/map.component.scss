@@ -1,3 +1,5 @@
+@import '../../theme';
+
 @mixin map-stretched {
     position: absolute;
     top: 0;
@@ -48,6 +50,34 @@ div.user {
 
         &.walking {
             animation: walking 0.25s steps(1) infinite;
+        }
+    }
+}
+
+div.places {
+    position: absolute;
+    top: 0;
+    right: 0;
+    max-width: 75%;
+    background-color: white;
+    @include mat-elevation(2);
+
+    label {
+        display: block;
+        margin: 8px;
+        margin-bottom: 0;
+        text-align: center;
+        font-size: 0.8em;
+        line-height: 10px;
+    }
+
+    .mat-nav-list .mat-list-item {
+        font-size: 0.8em;
+        height: 30px;
+
+        small {
+            margin-left: 10px;
+            opacity: 0.5;
         }
     }
 }

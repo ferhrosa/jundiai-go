@@ -9,11 +9,13 @@ import { Observable } from 'rxjs';
 import { Place } from '../shared/place.model';
 import { collections } from '../shared/collections';
 import { Feature, Geometry } from 'geojson';
+import * as _ from 'lodash';
 
 const container = 'map';
 const initialZoom = 17;
 const initialUserScale = 0.75;
 const minUserScale = 0.25;
+const maxDistanceToDisplayPlaces = 2000;
 
 // const maxBoundaries = new mapboxgl.LngLatBounds([-47.051, -23.345], [-46.765, -23.055]);
 
@@ -44,6 +46,7 @@ export class MapComponent implements OnInit {
 
     places: Observable<Place[]>;
     placesSource: mapboxgl.GeoJSONSource;
+    nearPlaces: Place[] = [];
 
     constructor(
         private db: AngularFirestore,
@@ -80,6 +83,8 @@ export class MapComponent implements OnInit {
                     this.buildMap();
 
                     navigator.geolocation.watchPosition(p => this.updateCurrentPosition(p));
+
+                    this.updateNearPlaces();
                 },
                 error => {
                     if (error.code === error.PERMISSION_DENIED) {
@@ -198,6 +203,8 @@ export class MapComponent implements OnInit {
             speed: 0.25,
             curve: 2,
         });
+
+        this.updateNearPlaces();
     }
 
     updateUserTransform = () => {
@@ -210,4 +217,50 @@ export class MapComponent implements OnInit {
 
         this.userTransform = this.sanitizer.bypassSecurityTrustStyle(`scale(${scale}) ${rotate}`);
     }
+
+    updateNearPlaces() {
+        const subs = this.places.subscribe(places => {
+            this.nearPlaces.splice(0, this.nearPlaces.length);
+
+            _(places)
+                .filter(place => this.calculateDistance(place) <= maxDistanceToDisplayPlaces)
+                .orderBy(place => this.calculateDistance(place))
+                .each(place => this.nearPlaces.push(place));
+
+            subs.unsubscribe();
+        });
+    }
+
+    showPlace(place: Place) {
+        console.dir(place);
+    }
+
+    calculateDistance(place: Place): number {
+        const R = 6371e3; // metres
+        const φ1 = this.toRadians(this.lat);
+        const φ2 = this.toRadians(place.latitude);
+        const Δφ = this.toRadians(place.latitude - this.lat);
+        const Δλ = this.toRadians(place.longitude - this.lng);
+
+        const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c;
+    }
+
+    getFormattedDistance(place: Place): string {
+        let distance = this.calculateDistance(place);
+        let unit = 'm';
+
+        if (distance >= 1000) {
+            distance = distance / 1000;
+            unit = 'km';
+        }
+
+        return `${distance.toFixed(1).replace('.', ',')}${unit}`;
+    }
+
+    private toRadians = (n: number): number => n * Math.PI / 180;
 }

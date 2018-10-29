@@ -4,6 +4,16 @@
     <div [style.transform]="userTransform" [class.walking]="isUserWalking"></div>
 </div>
 
+<div class="places" *ngIf="nearPlaces && nearPlaces.length">
+    <label>Locais próximos:</label>
+    <mat-nav-list mat-card-image>
+        <a mat-list-item *ngFor="let place of nearPlaces" (click)="showPlace(place)">
+            {{ place.name }}
+            <small>({{ getFormattedDistance(place) }})</small>
+        </a>
+    </mat-nav-list>
+</div>
+
 <div class="controls" *ngIf="hasBuildedMap">
 
     <!-- <input [ngModel]="zoom" style="position: absolute; top: 20px; left: 20px"> -->
@@ -19,7 +29,8 @@
 
 <div *ngIf="!hasRequestedMapPermission && hasMapPermission === null" class="request-permission">
     <div class="message">
-        Para visualizar o mapa, é necessário que você conceda permissão para este aplicativo visualizar a sua localização
+        Para visualizar o mapa, é necessário que você conceda permissão para este aplicativo visualizar a sua
+        localização
         atual.<br>
         <button mat-raised-button color="accent" (click)="initializeMap()">
             Conceder permissão
