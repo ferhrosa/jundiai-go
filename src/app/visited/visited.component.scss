@@ -1,0 +1,23 @@
+main {
+    padding: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+
+    > div {
+        margin: 0 auto;
+        max-width: 600px;    
+    }
+}
+
+.mat-card-header .mat-card-title {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.mat-card {
+    margin-bottom: 20px;
+}

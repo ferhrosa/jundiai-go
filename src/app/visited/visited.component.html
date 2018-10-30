@@ -1,3 +1,17 @@
-<p>
-  visited works!
-</p>
+<main>
+    <div>
+    
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Locais visitados</mat-card-title>
+        </mat-card-header>
+        <mat-nav-list mat-card-image>
+          <a mat-list-item *ngFor="let place of places" (click)="showPlace(place)">
+            <h3 matLine>{{ place.name }}</h3>
+            <p matLine>{{ place.description }}</p>
+          </a>
+        </mat-nav-list>
+      </mat-card>
+  
+    </div>
+  </main>

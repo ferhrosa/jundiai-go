@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
@@ -12,7 +12,7 @@ import { resetFakeAsyncZone } from '@angular/core/testing';
   templateUrl: './places.component.html',
   styleUrls: ['./places.component.scss']
 })
-export class PlacesComponent implements OnInit {
+export class PlacesComponent {
 
   places: Observable<Place[]>;
 
@@ -21,9 +21,6 @@ export class PlacesComponent implements OnInit {
   constructor(private db: AngularFirestore) {
     this.places = Entity.getList(db, collections.places,
       ref => ref.orderBy('name'));
-  }
-
-  ngOnInit() {
   }
 
   editPlace(place: Place): void {
