@@ -1,7 +1,16 @@
 main {
     padding: 20px;
-    margin: 0 auto;
-    max-width: 600px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+
+    > div {
+        margin: 0 auto;
+        max-width: 600px;    
+    }
 }
 
 .mat-card-header .mat-card-title {
@@ -18,10 +27,15 @@ form .mat-card-content {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
+    align-items: center;
 
-    .mat-form-field {
-        width: 30%;
-    }
+    .field-100 { width: 100%; }
+    .field-60 { width: 60%; }
+    .field-30 { width: 30%; }
+
+    // .mat-form-field {
+    //     width: 30%;
+    // }
 }
 
 .mat-nav-list {

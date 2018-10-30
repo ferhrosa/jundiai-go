@@ -7,7 +7,7 @@
 <div class="places" *ngIf="nearPlaces && nearPlaces.length">
     <label>Locais próximos:</label>
     <mat-nav-list mat-card-image>
-        <a mat-list-item *ngFor="let place of nearPlaces" (click)="showPlace(place)">
+        <a mat-list-item *ngFor="let place of nearPlaces" (click)="showPlace(place)" [class.visited]="isVisitedPlace(place)">
             {{ place.name }}
             <small>({{ getFormattedDistance(place) }})</small>
         </a>

@@ -10,6 +10,9 @@ import { Place } from '../shared/place.model';
 import { collections } from '../shared/collections';
 import { Feature, Geometry } from 'geojson';
 import * as _ from 'lodash';
+import { MatDialog } from '@angular/material';
+import { PlaceDialogComponent } from '../place-dialog/place-dialog.component';
+import { storage } from 'firebase';
 
 const container = 'map';
 const initialZoom = 17;
@@ -44,18 +47,23 @@ export class MapComponent implements OnInit {
     isUserWalking = false;
     isUserFacingLeft = false;
 
-    places: Observable<Place[]>;
+    placesObservable: Observable<Place[]>;
     placesSource: mapboxgl.GeoJSONSource;
+    places: Place[] = [];
     nearPlaces: Place[] = [];
+    visitedPlaces: Place[];
 
     constructor(
         private db: AngularFirestore,
-        private sanitizer: DomSanitizer) { }
+        private sanitizer: DomSanitizer,
+        public dialog: MatDialog) { }
 
     ngOnInit() {
         if (this.hasRequestedMapPermission) { this.initializeMap(); }
 
-        this.places = Entity.getList(this.db, collections.places);
+        this.placesObservable = Entity.getList(this.db, collections.places);
+
+        this.visitedPlaces = JSON.parse(localStorage.getItem('visitedPlaces')) || [];
     }
 
     getUserPosition = (): GeoJSON.Feature<GeoJSON.Geometry> => {
@@ -147,7 +155,7 @@ export class MapComponent implements OnInit {
             this.placesSource = this.map.getSource('places') as mapboxgl.GeoJSONSource;
 
             // Updates the places list when it's loaded (or when it's changed on Firebase).
-            this.places.subscribe(places => {
+            this.placesObservable.subscribe(places => {
                 this.placesSource.setData(<GeoJSON.FeatureCollection<GeoJSON.Geometry>>{
                     type: 'FeatureCollection',
                     features: places.map<Feature<Geometry>>(place => <Feature<Geometry>>{
@@ -162,6 +170,11 @@ export class MapComponent implements OnInit {
                         },
                     }),
                 });
+
+                this.places.splice(0, this.places.length);
+                _.each(places, place => this.places.push(place));
+
+                this.updateNearPlaces();
             });
 
             // Create the layer to display the places on the map.
@@ -219,20 +232,28 @@ export class MapComponent implements OnInit {
     }
 
     updateNearPlaces() {
-        const subs = this.places.subscribe(places => {
-            this.nearPlaces.splice(0, this.nearPlaces.length);
+        this.nearPlaces.splice(0, this.nearPlaces.length);
 
-            _(places)
-                .filter(place => this.calculateDistance(place) <= maxDistanceToDisplayPlaces)
-                .orderBy(place => this.calculateDistance(place))
-                .each(place => this.nearPlaces.push(place));
-
-            subs.unsubscribe();
-        });
+        _(this.places)
+            .filter(place => this.calculateDistance(place) <= maxDistanceToDisplayPlaces)
+            .orderBy(place => this.calculateDistance(place))
+            .orderBy(place => this.isVisitedPlace(place))
+            .each(place => this.nearPlaces.push(place));
     }
 
     showPlace(place: Place) {
-        console.dir(place);
+        this.dialog.open(PlaceDialogComponent, {
+            data: place,
+        });
+
+        this.visitedPlaces.push(place);
+        localStorage.setItem('visitedPlaces', JSON.stringify(this.visitedPlaces));
+
+        this.updateNearPlaces();
+    }
+
+    isVisitedPlace(place: Place) {
+        return _.some(this.visitedPlaces, vp => vp.id === place.id);
     }
 
     calculateDistance(place: Place): number {
